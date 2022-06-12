@@ -1,0 +1,74 @@
+/* CSS Reset */
+@import "reset.css";
+
+
+/* Import of fonts */
+@import url('https://fonts.googleapis.com/css2?family=VT323');
+
+@font-face {
+    font-family: pixelFont;
+    src: url("../font/04b03.ttf");
+}
+
+html {
+    font-size: 100%;
+    /* Lets the user control over the size of text on the screen */
+    box-sizing: border-box;
+    /* The padding won't add total width to element */
+}
+
+body {
+    background-color: darkslategrey;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #CCC4D3;
+}
+
+#app {
+    background-color: black;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border: 0;
+    z-index: 1000002;
+    box-shadow: 0 0 30px #000;
+    width: 480px;
+    height: 720px;
+}
+
+h1 {
+    font-family: pixelFont;
+
+    font-size: 4rem;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+h3 {
+    margin-top: 10px;
+    font-size: 1.5rem;
+}
+
+h5 {
+    font-family: VT323;
+    font-size: 1rem;
+    margin-top: 15px;
+}
+
+/* unvisited link */
+a:link {
+    color: #CCC4D3;
+}
+
+/* visited link */
+a:visited {
+    color: #CCC4D3;
+}
+
+/* mouse over link */
+a:hover {
+    color: white;
+}

@@ -14,18 +14,31 @@
 
     <link rel="stylesheet" href="./src/styles.css" />
 
-    <script src="./js/objects.js" defer></script>
-    <script src="./js/app.js" defer></script>
+    <script type="text/javascript" src="./js/app.js"></script>
+    <script type="text/javascript" src="./js/gameObject.js"></script>
+    <script type="text/javascript" src="./js/wordBlock.js"></script>
+    <script type="text/javascript" src="./js/spaceship.js"></script>
 
+    <!--Font library-->
     <script src="https://kit.fontawesome.com/010a4afca7.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <h1>Keyboard Invaders</h1>
     <div>
-    <canvas id="app" width="480" height="720">Your browser does not support the HTML5 canvas tag.</canvas></div>
+        <canvas id="app" width="480" height="720">Your browser does not support the HTML5 canvas tag.</canvas>
+    </div>
     <h5>Bernat Escarrà - Ironhack - Barcelona 2022</h5>
-    <h3><a href="http://github.com/thisisbernat" target="_blank"><i class="fa-brands fa-github"></i></a></h3>
+    <h3><a href="http://github.com/thisisbernat" target="_blank"><i class="fa-brands fa-github"></i></a>
+        <a href="http://www.linkedin.com" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+    </h3>
+
+    <script>
+        // Listen to the onLoad event, then create a game world
+        window.onload = function () {
+            let gameWorld = new GameWorld('app');
+        }
+    </script>
 
 </body>
 

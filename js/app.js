@@ -1,87 +1,123 @@
-// Initial variable declaration
-let canvas;
-let context;
-let rectX = 0;
-let rectY = 0;
-let movingSpeed = 50;
-let secondsPassed = 0;
-let oldTimeStamp = 0;
-let timePassed = 0;
+class GameWorld {
 
-let gameObjects = createWorld();
+    constructor(canvasId) {
+        this.canvas = null;
+        this.context = null;
+        this.secondsPassed = 0;
+        this.oldTimeStamp = 0;
+        this.gameObjects = [];
+        this.resetCounter = 0;
 
-function createWorld() {
-    let gameObjects = [
-        new Square(context, 250, 50, 0, 50),
-        new Square(context, 250, 300, 0, -50),
-        new Square(context, 150, 0, 50, 50),
-        new Square(context, 250, 150, 50, 50),
-        new Square(context, 350, 75, -50, 50),
-        new Square(context, 300, 300, 50, -50)
-    ];
-    return gameObjects;
+        this.init(canvasId);
+    }
+
+    init(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.context = this.canvas.getContext('2d');
+
+        this.createWorld();
+
+        // Request an animation frame for the first time
+        // The gameLoop() function is called as a callback of this request
+        window.requestAnimationFrame((timeStamp) => { this.gameLoop(timeStamp) });
+    }
+
+    createWorld() {
+        this.gameObjects = [
+            new wordBlock(this.context, 250, 50, 0, 50, 1),
+            new wordBlock(this.context, 250, 300, 0, -50, 200),
+            new wordBlock(this.context, 200, 0, 50, 50, 1),
+            new wordBlock(this.context, 250, 150, 50, 50, 1),
+            new wordBlock(this.context, 300, 75, -50, 50, 1),
+            new wordBlock(this.context, 300, 300, 50, -50, 1),
+            new Spaceship(this.context)
+        ];
+    }
+
+    gameLoop(timeStamp) {
+        // Calculate how much time has passed
+        this.secondsPassed = (timeStamp - this.oldTimeStamp) / 1000;
+        this.oldTimeStamp = timeStamp;
+
+        // Loop over all game objects to update
+        for (let i = 0; i < this.gameObjects.length; i++) {
+            this.gameObjects[i].update(this.secondsPassed);
+        }
+
+        this.detectCollisions();
+
+        this.clearCanvas();
+
+        // Loop over all game objects to draw
+        for (let i = 0; i < this.gameObjects.length; i++) {
+            this.gameObjects[i].draw();
+        }
+
+        // Keep requesting new frames
+        window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
+    }
+
+    detectCollisions() {
+        let obj1;
+        let obj2;
+
+        // Reset collision state of all objects
+        for (let i = 0; i < this.gameObjects.length; i++) {
+            this.gameObjects[i].isColliding = false;
+        }
+
+        // Start checking for collisions
+        for (let i = 0; i < this.gameObjects.length; i++) {
+            obj1 = this.gameObjects[i];
+            for (let j = i + 1; j < this.gameObjects.length; j++) {
+                obj2 = this.gameObjects[j];
+
+               // Compare object1 with object2
+                if (this.rectIntersect(obj1.x, obj1.y, obj1.width, obj1.height, obj2.x, obj2.y, obj2.width, obj2.height)){
+                obj1.isColliding = true;
+                obj2.isColliding = true;
+                }
+            }
+        }
+    }
+
+    rectIntersect(x1, y1, w1, h1, x2, y2, w2, h2) {
+
+        // Check x and y for overlap
+        if (x2 > w1 + x1 || x1 > w2 + x2 || y2 > h1 + y1 || y1 > h2 + y2) {
+            return false;
+        }
+
+        return true;
+    }
+
+    clearCanvas() {
+        // Clear the canvas
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        const background = this.drawBackground();
+        this.context.drawImage(background, 0, 0)
+    }
+
+    drawBackground() {
+        const background = new Image();
+        background.src = "./img/stars-background.png";
+        return background;
+    }
+
+    
 }
 
-// Listen to the onLoad event to make sure everything is loaded. Then execute init()
-window.onload = init;
+CanvasRenderingContext2D.prototype.roundRect = function (x, y, width, height, radius) {
+    if (width < 2 * radius) radius = width / 2;
+    if (height < 2 * radius) radius = height / 2;
+    this.beginPath();
+    this.moveTo(x + radius, y);
+    this.arcTo(x + width, y, x + width, y + height, radius);
+    this.arcTo(x + width, y + height, x, y + height, radius);
+    this.arcTo(x, y + height, x, y, radius);
+    this.arcTo(x, y, x + width, y, radius);
+    this.closePath();
+    return this;
+};
 
-// Execute init function when the page has loaded
-function init() {
-    canvas = document.getElementById('app');
-    context = canvas.getContext('2d');
 
-    // Request an animation frame for the first time
-    // The gameLoop() function will be called as a callback of this request
-    window.requestAnimationFrame(gameLoop);
-}
-
-function gameLoop(timeStamp) {
-    // Calculate how much time has passed
-    secondsPassed = (timeStamp - oldTimeStamp) / 1000;
-    oldTimeStamp = timeStamp;
-
-    // Update game objects
-    update(secondsPassed);
-
-    // Perform the drawing operation
-    draw();
-
-    // The loop function has reached it's end
-    // Keep requesting new frames
-    window.requestAnimationFrame(gameLoop);
-}
-
-function clearCanvas() {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-function update(secondsPassed) {
-
-    timePassed += secondsPassed
-
-    // Set the speed of the objects
-    // Use different easing functions for different effects
-    rectX = easeInOutQuint(timePassed, 50, 500, 1.5);
-    rectY = easeLinear(timePassed, 50, 250, 1.5);
-}
-
-// Example easing functions
-function easeInOutQuint(t, b, c, d) {
-    if ((t /= d / 2) < 1) return c / 2 * t * t * t * t * t + b;
-    return c / 2 * ((t -= 2) * t * t * t * t + 2) + b;
-}
-
-function easeLinear(t, b, c, d) {
-    return c * t / d + b;
-}
-
-function draw() {
-    // Clear the canvas
-    context.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Fill with red
-    context.fillStyle = '#ff8080';
-
-    // Draw a rectangle on the canvas
-    context.fillRect(rectX, rectY, 150, 100);
-}

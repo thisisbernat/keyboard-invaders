@@ -35,13 +35,10 @@ body {
     border: 0;
     z-index: 1000002;
     box-shadow: 0 0 30px #000;
-    width: 480px;
-    height: 720px;
 }
 
 h1 {
     font-family: pixelFont;
-
     font-size: 4rem;
     margin-top: 15px;
     margin-bottom: 20px;

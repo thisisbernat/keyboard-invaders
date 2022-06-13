@@ -5,26 +5,34 @@ class WordBlock extends GameObject {
         this.ogX = x;
         this.ogY = y;
         this.actionTime = t;
+
+        // Set font and measure text with this font
+        this.context.font = '14px pixelFont';
+        this.textLength = this.context.measureText(this.text).width;
+
+        // Set block's dimensions
+        this.blockRadius = 5;
+        this.blockPadding = 5;
+        this.height = 21;
+        this.offsetY = 14;
+        this.height = 21;
+        this.width = this.textLength + 10;
+
+        this.blockColor = 'black';
     }
 
     draw() {
         // Draw a round rectangle
-        this.block(this.text, this.x, this.y);
+        let color = this.isColliding ? 'darkred' : 'rgba(45, 62, 80, 1)';
+        this.block(this.text, this.x, this.y, color);
         
     }
 
     update(secondsPassed) {
-        /* Original
-        // Move with set velocity
-        this.x += this.vx * secondsPassed;
-        this.y += this.vy * secondsPassed;
-        */
-
         // 240, 710 is the static position of the spaceship
         let { vx, vy } = this.getSpeeds(this.ogX, this.ogY, 240, 710);
         this.x += vx * secondsPassed;
         this.y += vy * secondsPassed;
-
     }
 
     getSpeeds(ogX, ogY, destX, destY){
@@ -34,32 +42,20 @@ class WordBlock extends GameObject {
         return { vx, vy };        
     }
 
-    block(text, x, y) {
-
-        // Set font and measure text with this font
-        this.context.font = '14px pixelFont';
-        let textLength = this.context.measureText(text).width;
-
-        // Set dimensions relative to the text measure
-        let blockPadding = 5;
-        let blockLength = textLength + 2*blockPadding;
-        let blockHeight = 21;
-        let offsetX = blockPadding;
-        let offsetY = 14;
-        let blockRadius = 5;
-
+    block(text, x, y, color) {
+        // Block drawing
         this.context.beginPath();
-        this.context.moveTo(x + blockRadius, y);
-        this.context.arcTo(x + blockLength, y, x + blockLength, y + blockHeight, blockRadius);
-        this.context.arcTo(x + blockLength, y + blockHeight, x, y + blockHeight, blockRadius);
-        this.context.arcTo(x, y + blockHeight, x, y, blockRadius);
-        this.context.arcTo(x, y, x + blockLength, y, blockRadius);
-        this.context.fillStyle = 'rgba(45, 62, 80, 1)';        
+        this.context.moveTo(x + this.blockRadius, y);
+        this.context.arcTo(x + this.width, y, x + this.width, y + this.height, this.blockRadius);
+        this.context.arcTo(x + this.width, y + this.height, x, y + this.height, this.blockRadius);
+        this.context.arcTo(x, y + this.height, x, y, this.blockRadius);
+        this.context.arcTo(x, y, x + this.width, y, this.blockRadius);
+        this.context.fillStyle = color;        
         this.context.fill();
 
+        // Centered text
         this.context.fillStyle = 'white';
-        this.context.fillText(text, x+offsetX, y+offsetY);
+        this.context.fillText(text, x+this.blockPadding, y+this.offsetY);
 
-        return {blockLength, blockHeight};
     }
 }

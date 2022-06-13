@@ -26,14 +26,14 @@ class GameWorld {
     createWorld() {
         let t = 5;
         this.gameObjects = [
-            new Spaceship(this.context), // ALWAYS SPACESHIP FIRST
             // new WordBlock(this.context, 'text', x, y, t),
             new WordBlock(this.context, 'css', 20, -25, t*1.1),
             new WordBlock(this.context, 'html', 120, -30, t*0.9),
             new WordBlock(this.context, 'react', 180, -35, t),
             new WordBlock(this.context, 'javascript', 260, -40, t),
             new WordBlock(this.context, 'firefox', 360, -45, t),
-            new WordBlock(this.context, 'ironhack', 290, -20, t),            
+            new WordBlock(this.context, 'ironhack', 290, -20, t),
+            new Spaceship(this.context) // SPACESHIP IS ALWAYS LAST
         ];
     }
 
@@ -44,8 +44,8 @@ class GameWorld {
         this.oldTimeStamp = timeStamp;
 
         //The spaceship object
-        //console.log(this.gameObjects[0]);
-        
+        //console.log(this.gameObjects[this.gameObjects.length-1]);
+
         // Loop over all game objects to update
         for (let i = 0; i < this.gameObjects.length; i++) {
             this.gameObjects[i].update(this.secondsPassed);
@@ -64,30 +64,25 @@ class GameWorld {
         window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
     }
 
+
     detectCollisions() {
         let obj1;
         let obj2;
 
-        // Reset collision state of all objects
         for (let i = 0; i < this.gameObjects.length; i++) {
             this.gameObjects[i].isColliding = false;
         }
 
-        // Start checking for collisions
         for (let i = 0; i < this.gameObjects.length; i++) {
             obj1 = this.gameObjects[i];
-            for (let j = i + 1; j < this.gameObjects.length; j++) {
-                obj2 = this.gameObjects[j];
+            obj2 = this.gameObjects[this.gameObjects.length - 1];
 
-               // Compare object1 with object2
-                if (this.rectIntersect(obj1.x, obj1.y, obj1.width, obj1.height, obj2.x, obj2.y, obj2.width, obj2.height)){
+            if (this.rectIntersect(obj1.x, obj1.y, obj1.width, obj1.height, obj2.x, obj2.y, obj2.width, obj2.height)) {
                 obj1.isColliding = true;
-                obj2.isColliding = true;
-                }
-                //console.log(this.gameObjects[j].isColliding);
             }
         }
     }
+
 
     rectIntersect(x1, y1, w1, h1, x2, y2, w2, h2) {
 
@@ -112,5 +107,5 @@ class GameWorld {
         return background;
     }
 
-    
+
 }

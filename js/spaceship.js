@@ -10,15 +10,11 @@ class Spaceship extends GameObject {
         this.x = 224;   // 240px is half of canvas' width
         this.y = 650;
 
-        this.vx = 0;
-        this.vy = 0;
-
+        this.vx = 0; // It does not move
+        this.vy = 0; // It does not move
     }
 
     draw() {
-        //Draw a simple square
-        //this.context.fillStyle = this.isColliding ? '#ff8080' : '#0099b0';
-        //this.context.fillRect(this.x, this.y, this.width, this.height);
         const background = this.drawSpaceshipImage();
         this.context.drawImage(background, this.x, this.y);
     }

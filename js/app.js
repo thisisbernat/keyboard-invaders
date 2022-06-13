@@ -73,9 +73,10 @@ class GameWorld {
             this.gameObjects[i].isColliding = false;
         }
 
-        for (let i = 0; i < this.gameObjects.length; i++) {
+        // Iterate all objects except the last one (spaceship)
+        for (let i = 0; i < this.gameObjects.length-1; i++) {
             obj1 = this.gameObjects[i];
-            obj2 = this.gameObjects[this.gameObjects.length - 1];
+            obj2 = this.gameObjects[this.gameObjects.length - 1]; // The spaceship
 
             if (this.rectIntersect(obj1.x, obj1.y, obj1.width, obj1.height, obj2.x, obj2.y, obj2.width, obj2.height)) {
                 obj1.isColliding = true;

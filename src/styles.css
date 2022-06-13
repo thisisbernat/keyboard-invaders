@@ -18,7 +18,7 @@ html {
 }
 
 body {
-    background-color: darkslategrey;
+    background-color: #343434ff;
     display: flex;
     flex-direction: column;
     align-items: center;

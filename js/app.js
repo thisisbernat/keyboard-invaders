@@ -24,22 +24,28 @@ class GameWorld {
     }
 
     createWorld() {
+        let t = 5;
         this.gameObjects = [
-            new wordBlock(this.context, 250, 50, 0, 50, 1),
-            new wordBlock(this.context, 250, 300, 0, -50, 200),
-            new wordBlock(this.context, 200, 0, 50, 50, 1),
-            new wordBlock(this.context, 250, 150, 50, 50, 1),
-            new wordBlock(this.context, 300, 75, -50, 50, 1),
-            new wordBlock(this.context, 300, 300, 50, -50, 1),
-            new Spaceship(this.context)
+            new Spaceship(this.context), // ALWAYS SPACESHIP FIRST
+            // new WordBlock(this.context, 'text', x, y, t),
+            new WordBlock(this.context, 'css', 20, -25, t*1.1),
+            new WordBlock(this.context, 'html', 120, -30, t*0.9),
+            new WordBlock(this.context, 'react', 180, -35, t),
+            new WordBlock(this.context, 'javascript', 260, -40, t),
+            new WordBlock(this.context, 'firefox', 360, -45, t),
+            new WordBlock(this.context, 'ironhack', 290, -20, t),            
         ];
     }
 
     gameLoop(timeStamp) {
         // Calculate how much time has passed
         this.secondsPassed = (timeStamp - this.oldTimeStamp) / 1000;
+        this.secondsPassed = Math.min(this.secondsPassed, 0.1); // Move forward with a max amount
         this.oldTimeStamp = timeStamp;
 
+        //The spaceship object
+        //console.log(this.gameObjects[0]);
+        
         // Loop over all game objects to update
         for (let i = 0; i < this.gameObjects.length; i++) {
             this.gameObjects[i].update(this.secondsPassed);
@@ -78,6 +84,7 @@ class GameWorld {
                 obj1.isColliding = true;
                 obj2.isColliding = true;
                 }
+                //console.log(this.gameObjects[j].isColliding);
             }
         }
     }

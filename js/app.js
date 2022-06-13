@@ -7,7 +7,6 @@ class GameWorld {
         this.oldTimeStamp = 0;
         this.gameObjects = [];
         this.resetCounter = 0;
-
         this.init(canvasId);
     }
 
@@ -23,8 +22,24 @@ class GameWorld {
         window.requestAnimationFrame((timeStamp) => { this.gameLoop(timeStamp) });
     }
 
+    getLevel() {
+        let level1 = ['css', 'dom', 'github', 'html'];
+        let level2 = ['csv', 'boolean', 'express', 'ftp', 'keyboard'];
+        let level3 = ['chrome', 'bootstrap', 'javascript', 'xml', 'undefined', 'function'];
+        let level4 = ['codewars', 'bug', 'ironhack', 'loop', 'array', 'full stack', 'react'];
+        let level5 = ['cloud', 'browser', 'length', 'web', 'update', 'agile', 'responsive', 'syntax'];
+        let level6 = ['canvas', 'backend', 'explorer', 'json', 'apple', 'string', 'ruby', 'delete', 'object'];
+        let level7 = ['computer', 'back', 'gnu', 'http', 'windows', 'api', 'developement', 'firefox', 'mongoose', 'number'];
+        let level8 = ['code', 'edge', 'java', 'list', 'angular', 'stack', 'resolution', 'mongodb', 'null', 'php', 'flexbox'];
+        let level9 = ['cache', 'get', 'linux', 'algorithm', 'rest', 'script', 'documentation', 'frontend', 'mysql', 'plugin', 'internet', 'barcelona'];
+        let level10 = ['camel case', 'game', 'visual studio code', 'width', 'assessment', 'safari', 'debugging', 'framework', 'microsoft', 'node.js', 'overflow', 'python'];
+        return level1;
+    }
+
     createWorld() {
         let t = 5;
+        let blockObjects = this.getLevel();
+        console.log(blockObjects);
         this.gameObjects = [
             // new WordBlock(this.context, 'text', x, y, t),
             new WordBlock(this.context, 'css', 20, -25, t*1.1),

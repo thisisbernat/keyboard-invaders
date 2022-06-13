@@ -17,8 +17,8 @@ class Spaceship extends GameObject {
 
     draw() {
         //Draw a simple square
-        this.context.fillStyle = this.isColliding ? '#ff8080' : '#0099b0';
-        this.context.fillRect(this.x, this.y, this.width, this.height);
+        //this.context.fillStyle = this.isColliding ? '#ff8080' : '#0099b0';
+        //this.context.fillRect(this.x, this.y, this.width, this.height);
         const background = this.drawSpaceshipImage();
         this.context.drawImage(background, this.x, this.y);
     }

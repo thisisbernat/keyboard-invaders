@@ -14,6 +14,7 @@ class GameWorld {
     init(canvasId) {
         this.canvas = document.getElementById(canvasId);
         this.context = this.canvas.getContext('2d');
+        const pixelFont = new FontFace("pixelFont", "url(./font/04b03.ttf)");
 
         this.createWorld();
 
@@ -106,18 +107,3 @@ class GameWorld {
 
     
 }
-
-CanvasRenderingContext2D.prototype.roundRect = function (x, y, width, height, radius) {
-    if (width < 2 * radius) radius = width / 2;
-    if (height < 2 * radius) radius = height / 2;
-    this.beginPath();
-    this.moveTo(x + radius, y);
-    this.arcTo(x + width, y, x + width, y + height, radius);
-    this.arcTo(x + width, y + height, x, y + height, radius);
-    this.arcTo(x, y + height, x, y, radius);
-    this.arcTo(x, y, x + width, y, radius);
-    this.closePath();
-    return this;
-};
-
-

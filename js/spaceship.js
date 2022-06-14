@@ -12,6 +12,8 @@ class Spaceship extends GameObject {
 
         this.vx = 0; // It does not move
         this.vy = 0; // It does not move
+
+        this.isCompleted = false;
     }
 
     draw() {

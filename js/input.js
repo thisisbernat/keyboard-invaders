@@ -23,13 +23,13 @@ class InputHandler {
         };
     };
 
-    logKeys(wordsArray,event) {
+    logKeys(this.wordsArray,event) {
         let selectedWord = "";
         if (this.firstChar) {
             this.prevChar = event.key;
-            let selectedIndex = this.choice(wordsArray, event.key);
+            let selectedIndex = this.choice(this.wordsArray, event.key);
             if (selectedIndex !== -1) {
-                //console.log(wordsArray[selectedIndex]);
+                //console.log(this.wordsArray[selectedIndex]);
                 //console.log(event.key);
                 this.firstChar = false;
                 //firstPart = document.querySelector(`#word${selectedIndex} #first-part`);
@@ -45,26 +45,26 @@ class InputHandler {
             //spell
             let found = false;
             let selectedIndex = 0;
-            for (let i = 0; i < wordsArray.length; i++) {
-                if (wordsArray[i].indexOf(this.prevChar) !== -1) {
+            for (let i = 0; i < this.wordsArray.length; i++) {
+                if (this.wordsArray[i].indexOf(this.prevChar) !== -1) {
                     selectedIndex = i;
                     found = true;
-                    if (wordsArray[i] === this.prevChar) {
+                    if (this.wordsArray[i] === this.prevChar) {
                         //console.log('paraula completa!');
                         //treure la paraula de l'array
-                        wordsArray.splice(i, 1);
-                        console.log(wordsArray);
-                        //buildHTML(wordsArray);
+                        this.wordsArray.splice(i, 1);
+                        console.log(this.wordsArray);
+                        //buildHTML(this.wordsArray);
                         this.firstChar = true;
                     };
-                    if (wordsArray.length === 0) {
+                    if (this.wordsArray.length === 0) {
                         console.log('Win!');
                         //passem de nivell
                     };
                 };
             };
             if (found) {
-                //console.log(wordsArray[selectedIndex]);
+                //console.log(this.wordsArray[selectedIndex]);
             } else {
                 console.log(`error corregit!`);
                 this.prevChar = this.prevChar.slice(0, -1);
@@ -72,10 +72,4 @@ class InputHandler {
             console.log(this.prevChar);
         };
     };
-
-    deleteWord(wordToDelete) {
-        this.blockTextsArray.filter(function (eachWord) {
-            return eachWord !== 'html';
-        });
-    }
 };

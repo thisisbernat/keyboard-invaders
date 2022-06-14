@@ -6,6 +6,7 @@ class WordBlock extends GameObject {
         this.ogY = y;
         this.actionTime = t;
         this.isPicked = false;
+        this.isCompleted = false;
 
         // Set font and measure text with this font
         this.context.font = '14px pixelFont';
@@ -24,8 +25,8 @@ class WordBlock extends GameObject {
 
     draw() {
         // Draw a round rectangle
-        let color = this.isColliding ? 'darkred' : 'rgba(45, 62, 80, 1)';
-        this.block(this.text, this.x, this.y, color);
+        let rectangleColor = this.isColliding ? 'darkred' : 'rgba(45, 62, 80, 1)';
+        this.block(this.text, this.x, this.y, rectangleColor);
         
     }
 
@@ -59,13 +60,18 @@ class WordBlock extends GameObject {
         this.context.fill();
 
         // Centered text
-        if (this.isPicked) {
-            this.context.fillStyle = '#a09aa5';
-        } else {
-            this.context.fillStyle = 'white';
-        }
+        let textColor = this.isPicked ? '#ff9c00' : 'white';
+        this.context.fillStyle = textColor;
         this.context.fillText(text, x+this.blockPadding, y+this.offsetY);
 
+    }
+
+    updatePickedStatus() {
+        this.isPicked = true;
+    }
+
+    updateCompletedStatus() {
+        this.isCompleted = true;
     }
 
 }

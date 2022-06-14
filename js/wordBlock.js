@@ -5,6 +5,7 @@ class WordBlock extends GameObject {
         this.ogX = x;
         this.ogY = y;
         this.actionTime = t;
+        this.isPicked = false;
 
         // Set font and measure text with this font
         this.context.font = '14px pixelFont';
@@ -58,8 +59,13 @@ class WordBlock extends GameObject {
         this.context.fill();
 
         // Centered text
-        this.context.fillStyle = 'white';
+        if (this.isPicked) {
+            this.context.fillStyle = '#a09aa5';
+        } else {
+            this.context.fillStyle = 'white';
+        }
         this.context.fillText(text, x+this.blockPadding, y+this.offsetY);
 
     }
+
 }

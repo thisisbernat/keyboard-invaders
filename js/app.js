@@ -5,9 +5,10 @@ class GameWorld {
         this.context = null;
         this.secondsPassed = 0;
         this.oldTimeStamp = 0;
+        this.level = 1;
+        this.wordsArray = [];
         this.gameObjects = [];
         this.resetCounter = 0;
-        this.level = 1;
         this.init(canvasId);
     }
 
@@ -15,8 +16,11 @@ class GameWorld {
         this.canvas = document.getElementById(canvasId);
         this.context = this.canvas.getContext('2d');
         const pixelFont = new FontFace("pixelFont", "url(./font/04b03.ttf)");
+        this.wordsArray = this.getLevel(this.level);
 
         this.createWorld();
+
+        new InputHandler(this.wordsArray);
 
         // Request an animation frame for the first time
         // The gameLoop() function is called as a callback of this request
@@ -24,18 +28,17 @@ class GameWorld {
     }
 
     createWorld() {
-        let blockTextsArray = this.getLevel(this.level);
         let spaceshipObject = new Spaceship(this.context);
 
-
         // Let's build this.gameObjects array
-        for (let i = 0; i < blockTextsArray.length; i++) {
+        for (let i = 0; i < this.wordsArray.length; i++) {
             // new WordBlock(this.context, 'text', x, y, t)
-            this.gameObjects.push(new WordBlock(this.context, blockTextsArray[i], this.getRandomX(), this.getRandomY(), this.getActionTime(this.level)));
+            this.gameObjects.push(new WordBlock(this.context, this.wordsArray[i], this.getRandomX(), this.getRandomY(), this.getActionTime(this.level)));
         }
 
         // Adding the spaceship
         this.gameObjects.push(spaceshipObject);
+
     }
 
     gameLoop(timeStamp) {

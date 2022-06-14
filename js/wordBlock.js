@@ -35,6 +35,10 @@ class WordBlock extends GameObject {
         this.y += vy * secondsPassed;
     }
 
+    updateSpeed(newTime) {
+        this.actionTime = newTime;
+    }
+
     getSpeeds(ogX, ogY, destX, destY){
         let vx = (destX - ogX) / this.actionTime;
         let vy = (destY - ogY) / this.actionTime;

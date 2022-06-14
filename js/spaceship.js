@@ -25,6 +25,10 @@ class Spaceship extends GameObject {
         this.y += this.vy * secondsPassed;
     }
 
+    updateSpeed(newTime) {
+        return
+    }
+
     drawSpaceshipImage() {
         const background = new Image();
         background.src = "./img/spaceship.png";

@@ -7,6 +7,7 @@ class GameWorld {
         this.oldTimeStamp = 0;
         this.gameObjects = [];
         this.resetCounter = 0;
+        this.level = 1;
         this.init(canvasId);
     }
 
@@ -22,34 +23,19 @@ class GameWorld {
         window.requestAnimationFrame((timeStamp) => { this.gameLoop(timeStamp) });
     }
 
-    getLevel() {
-        let level1 = ['css', 'dom', 'github', 'html'];
-        let level2 = ['csv', 'boolean', 'express', 'ftp', 'keyboard'];
-        let level3 = ['chrome', 'bootstrap', 'javascript', 'xml', 'undefined', 'function'];
-        let level4 = ['codewars', 'bug', 'ironhack', 'loop', 'array', 'full stack', 'react'];
-        let level5 = ['cloud', 'browser', 'length', 'web', 'update', 'agile', 'responsive', 'syntax'];
-        let level6 = ['canvas', 'backend', 'explorer', 'json', 'apple', 'string', 'ruby', 'delete', 'object'];
-        let level7 = ['computer', 'back', 'gnu', 'http', 'windows', 'api', 'developement', 'firefox', 'mongoose', 'number'];
-        let level8 = ['code', 'edge', 'java', 'list', 'angular', 'stack', 'resolution', 'mongodb', 'null', 'php', 'flexbox'];
-        let level9 = ['cache', 'get', 'linux', 'algorithm', 'rest', 'script', 'documentation', 'frontend', 'mysql', 'plugin', 'internet', 'barcelona'];
-        let level10 = ['camel case', 'game', 'visual studio code', 'width', 'assessment', 'safari', 'debugging', 'framework', 'microsoft', 'node.js', 'overflow', 'python'];
-        return level1;
-    }
-
     createWorld() {
-        let t = 5;
-        let blockObjects = this.getLevel();
-        console.log(blockObjects);
-        this.gameObjects = [
-            // new WordBlock(this.context, 'text', x, y, t),
-            new WordBlock(this.context, 'css', 20, -25, t*1.1),
-            new WordBlock(this.context, 'html', 120, -30, t*0.9),
-            new WordBlock(this.context, 'react', 180, -35, t),
-            new WordBlock(this.context, 'javascript', 260, -40, t),
-            new WordBlock(this.context, 'firefox', 360, -45, t),
-            new WordBlock(this.context, 'ironhack', 290, -20, t),
-            new Spaceship(this.context) // SPACESHIP IS ALWAYS LAST
-        ];
+        let blockTextsArray = this.getLevel(this.level);
+        let spaceshipObject = new Spaceship(this.context);
+
+
+        // Let's build this.gameObjects array
+        for (let i = 0; i < blockTextsArray.length; i++) {
+            // new WordBlock(this.context, 'text', x, y, t)
+            this.gameObjects.push(new WordBlock(this.context, blockTextsArray[i], this.getRandomX(), this.getRandomY(), this.getActionTime(this.level)));
+        }
+
+        // Adding the spaceship
+        this.gameObjects.push(spaceshipObject);
     }
 
     gameLoop(timeStamp) {
@@ -89,7 +75,7 @@ class GameWorld {
         }
 
         // Iterate all objects except the last one (spaceship)
-        for (let i = 0; i < this.gameObjects.length-1; i++) {
+        for (let i = 0; i < this.gameObjects.length - 1; i++) {
             obj1 = this.gameObjects[i];
             obj2 = this.gameObjects[this.gameObjects.length - 1]; // The spaceship
 
@@ -123,5 +109,61 @@ class GameWorld {
         return background;
     }
 
+    getLevel(level) {
+        switch (level) {
+            case 1:
+                return ['css', 'dom', 'github', 'html'];
+                break;
+            case 2:
+                return ['csv', 'boolean', 'express', 'ftp', 'keyboard'];
+                break;
+            case 3:
+                return ['chrome', 'bootstrap', 'javascript', 'xml', 'undefined', 'function'];
+                break;
+            case 4:
+                return ['codewars', 'bug', 'ironhack', 'loop', 'array', 'full stack', 'react'];
+                break;
+            case 5:
+                return ['cloud', 'browser', 'length', 'web', 'update', 'agile', 'responsive', 'syntax'];
+                break;
+            case 6:
+                return ['canvas', 'backend', 'explorer', 'json', 'apple', 'string', 'ruby', 'delete', 'object'];
+                break;
+            case 7:
+                return ['computer', 'back', 'gnu', 'http', 'windows', 'api', 'developement', 'firefox', 'mongoose', 'number'];
+                break;
+            case 8:
+                return ['code', 'edge', 'java', 'list', 'angular', 'stack', 'resolution', 'mongodb', 'null', 'php', 'flexbox'];
+                break;
+            case 9:
+                return ['cache', 'get', 'linux', 'algorithm', 'rest', 'script', 'documentation', 'frontend', 'mysql', 'plugin', 'internet', 'barcelona'];
+                break;
+            case 10:
+                return ['camel case', 'game', 'visual studio code', 'width', 'assessment', 'safari', 'debugging', 'framework', 'microsoft', 'node.js', 'overflow', 'python'];
+                break;
+            default:
+                return ['end'];
+        }
+    }
 
+    getRandomY() {
+        let maxY = -21;
+        let minY = -50;
+        let blockY = Math.floor(Math.random() * (maxY - minY + 1)) + minY;
+        return blockY;
+    }
+
+    getRandomX() {
+        let maxX = 480;
+        let minX = 0;
+        let blockX = Math.floor(Math.random() * (maxX - minX + 1)) + minX;
+        return blockX;
+    }
+
+    getActionTime(level) {
+        let tMax = 8;
+        let tMin = 5;
+        let time = Math.floor(Math.random() * (tMax - tMin + 1)) + tMin;
+        return time;
+    }
 }

@@ -61,6 +61,7 @@ class GameWorld {
             for (let i = 0; i < this.wordsArray.length; i++) {
                 if (this.wordsArray[i].indexOf(this.prevChar) !== -1) {
                     selectedIndex = i;
+                    this.gameObjects[i].updateCharCount();
                     found = true;
                     if (this.wordsArray[i] === this.prevChar) {
                         //console.log('paraula completa!');
@@ -208,7 +209,7 @@ class GameWorld {
                 return ['chrome', 'bootstrap', 'javascript', 'xml', 'undefined', 'function'];
                 break;
             case 4:
-                return ['codewars', 'bug', 'ironhack', 'loop', 'array', 'full stack', 'react'];
+                return ['codewars', 'bug', 'ironhack', 'loop', 'array', 'fullstack', 'react'];
                 break;
             case 5:
                 return ['cloud', 'browser', 'length', 'web', 'update', 'agile', 'responsive', 'syntax'];
@@ -226,7 +227,7 @@ class GameWorld {
                 return ['cache', 'get', 'linux', 'algorithm', 'rest', 'script', 'documentation', 'frontend', 'mysql', 'plugin', 'internet', 'barcelona'];
                 break;
             case 10:
-                return ['camel case', 'game', 'visual studio code', 'width', 'assessment', 'safari', 'debugging', 'framework', 'microsoft', 'node.js', 'overflow', 'python'];
+                return ['camel case', 'game', 'vscode', 'width', 'assessment', 'safari', 'debugging', 'framework', 'microsoft', 'node.js', 'overflow', 'python'];
                 break;
             default:
                 return ['end'];
@@ -248,7 +249,7 @@ class GameWorld {
     }
 
     getActionTime(level) {
-        let tMax = 35; //Bona: 8
+        let tMax = 30; //Bona: 8
         let tMin = 15; //Bona: 5
         let time = Math.floor(Math.random() * (tMax - tMin + 1)) + tMin;
         return time;

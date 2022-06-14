@@ -7,6 +7,7 @@ class WordBlock extends GameObject {
         this.actionTime = t;
         this.isPicked = false;
         this.isCompleted = false;
+        this.charCount = 1;
 
         // Set font and measure text with this font
         this.context.font = '14px pixelFont';
@@ -17,7 +18,6 @@ class WordBlock extends GameObject {
         this.blockPadding = 5;
         this.height = 21;
         this.offsetY = 14;
-        this.height = 21;
         this.width = this.textLength + 10;
 
         this.blockColor = 'black';
@@ -59,10 +59,25 @@ class WordBlock extends GameObject {
         this.context.fillStyle = color;        
         this.context.fill();
 
-        // Centered text
+
+        // Writing the text
+        /* ORIGINAL
         let textColor = this.isPicked ? '#ff9c00' : 'white';
         this.context.fillStyle = textColor;
         this.context.fillText(text, x+this.blockPadding, y+this.offsetY);
+        */
+
+        if (this.isPicked) {
+            this.context.fillStyle = '#ff9c00';
+            this.context.fillText(text.slice(0,this.charCount), x+this.blockPadding, y+this.offsetY);
+            this.context.fillStyle = '#a09aa5';
+            this.context.fillText(text.slice(this.charCount), x+this.blockPadding+this.context.measureText(text.slice(0,this.charCount)).width, y+this.offsetY);
+        } else {
+            this.context.fillStyle = 'white';
+            this.context.fillText(text, x+this.blockPadding, y+this.offsetY);
+        }
+        
+
 
     }
 
@@ -72,6 +87,10 @@ class WordBlock extends GameObject {
 
     updateCompletedStatus() {
         this.isCompleted = true;
+    }
+
+    updateCharCount() {
+        this.charCount++;
     }
 
 }

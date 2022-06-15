@@ -28,7 +28,7 @@ class Button extends GameObject {
     update(secondsPassed) {
         this.x += 0;
         this.y += 0;
-        
+
         /*
         if (this.isClicked !== 0) {
             this.y -= this.ogY * secondsPassed;
@@ -49,14 +49,10 @@ class Button extends GameObject {
 
         // Text
         this.context.font = '28px pixelFont';
-        let fontColor;
-        if (this.isClicked !== 0) {
-            fontColor = '#ff9c00';
-        } else {
-            fontColor = 'white';
-        }
-
-        this.context.fillStyle = fontColor;
-        this.context.fillText(text, x + this.blockPadding, y + this.offsetY);
+        this.context.fillStyle = '#ff9c00';
+        this.context.fillText(text.slice(2, text.length - 2), x + this.blockPadding + this.context.measureText(text.slice(0, 2)).width, y + this.offsetY);
+        this.context.fillStyle = 'white';
+        this.context.fillText(text.slice(0, 2), x + this.blockPadding, y + this.offsetY);
+        this.context.fillText(text.slice(text.length - 2, text.length), x + this.blockPadding + this.context.measureText(text.slice(0, text.length - 2)).width, y + this.offsetY);
     }
 }

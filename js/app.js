@@ -16,6 +16,7 @@ class GameWorld {
         this.title;
         this.button;
         this.canvasId = canvasId;
+        this.levelTitle = "";
         this.initIntro();
     }
 
@@ -145,13 +146,12 @@ class GameWorld {
                         this.firstChar = true;                      
                     };
                     if (this.wordsArray.length === 0) {
-                        console.log('Win!');
+                        // NEXT LEVEL!
                         this.prevChar = "";
                         this.firstChar = true;
                         this.wordsArray = [];
                         this.gameObjects = [];
                         this.spaceshipObject = {};
-                        //passem de nivell
                         this.createWorld();
                     };
                 };
@@ -186,16 +186,27 @@ class GameWorld {
     createWorld() {
         this.level++;
         this.wordsArray = this.getLevel(this.level);
+        this.levelTitle = new LevelTitle(this.context, -200, 360, this.level);
         this.spaceshipObject = new Spaceship(this.context);
+        if (this.level > 10) {
+         this.spaceshipObject.vy = -300;
+        }
 
         // Let's build this.gameObjects array
-        for (let i = 0; i < this.wordsArray.length; i++) {
-            // new WordBlock(this.context, 'text', x, y, t)
-            this.gameObjects.push(new WordBlock(this.context, this.wordsArray[i], this.getRandomX(), this.getRandomY(), this.getActionTime(this.level)));
+        
+        if(this.level <= 10) {
+            for (let i = 0; i < this.wordsArray.length; i++) {
+                // new WordBlock(this.context, 'text', x, y, t)
+                this.gameObjects.push(new WordBlock(this.context, this.wordsArray[i], this.getRandomX(), this.getRandomY(), this.getActionTime(this.level)));
+            }
         }
+        
 
         // Adding the spaceship
         this.gameObjects.push(this.spaceshipObject);
+
+        // Adding the level title
+        this.gameObjects.push(this.levelTitle);
     }
 
     gameLoop(timeStamp) {
@@ -240,10 +251,10 @@ class GameWorld {
             this.gameObjects[i].isColliding = false;
         }
 
-        // Iterate all objects except the last one (spaceship)
-        for (let i = 0; i < this.gameObjects.length - 1; i++) {
+        // Iterate all objects except the last two (spaceship and level title)
+        for (let i = 0; i < this.gameObjects.length - 2; i++) {
             obj1 = this.gameObjects[i];
-            obj2 = this.gameObjects[this.gameObjects.length - 1]; // The spaceship
+            obj2 = this.spaceshipObject; // The spaceship
 
             if (this.rectIntersect(obj1.x, obj1.y, obj1.width, obj1.height, obj2.x, obj2.y, obj2.width, obj2.height)) {
                 obj1.isColliding = true;
@@ -265,15 +276,17 @@ class GameWorld {
     clearCanvas() {
         // Clear the canvas
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        const background = this.drawBackground();
-        this.context.drawImage(background, 0, 0)
+        //const background = this.drawBackground();
+        //this.context.drawImage(background, 0, 0)
     }
 
+    /*
     drawBackground() {
         const background = new Image();
         background.src = "./img/stars-background.png";
         return background;
     }
+    */
 
     getLevel(level) {
         switch (level) {
@@ -308,7 +321,7 @@ class GameWorld {
                 return ['camelcase', 'game', 'vscode', 'width', 'assessment', 'safari', 'debugging', 'framework', 'microsoft', 'nodejs', 'overflow', 'python'];
                 break;
             default:
-                return ['game over'];
+                return ['gameover'];
         }
     }
 

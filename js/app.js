@@ -5,7 +5,7 @@ class GameWorld {
         this.context = null;
         this.secondsPassed = 0;
         this.oldTimeStamp = 0;
-        this.level = 4;
+        this.level = 5;
         this.wordsArray = [];
         this.gameObjects = [];
         this.resetCounter = 0;

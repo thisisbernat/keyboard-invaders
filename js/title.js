@@ -14,10 +14,12 @@ class Title extends GameObject {
         this.context.font = `30px pixelFont`;
         this.context.fillStyle = '#CCC4D3';
         this.context.fillText('Welcome to', this.x, this.y);
+        this.context.fillStyle = 'white';
         this.context.font = `50px pixelFont`;
         this.context.fillText('KEYBOARD', this.x-35, this.y+50);
         this.context.fillText('INVADERS', this.x-35, this.y+100);
         this.context.font = `20px pixelFont`;
+        this.context.fillStyle = '#CCC4D3';
         this.context.fillText('IRONHACK', this.x+35, this.y+130);
     }
 

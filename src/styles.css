@@ -35,7 +35,7 @@ body > div {
 }
 
 #app {
-    background-color: black;
+    background-color: #290F35;
     left: 0;
     right: 0;
     top: 0;
@@ -65,7 +65,7 @@ h3 {
 h5 {
     font-family: VT323;
     font-size: 1rem;
-    margin-top: 15px;
+    margin-top: 5px;
 }
 
 /* unvisited link */

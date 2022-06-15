@@ -18,7 +18,7 @@ class WordBlock extends GameObject {
         this.blockPadding = 5;
         this.height = 21;
         this.offsetY = 14;
-        this.width = this.textLength + 10;
+        this.width = this.blockPadding + this.textLength + this.blockPadding;
 
         this.blockColor = 'black';
     }

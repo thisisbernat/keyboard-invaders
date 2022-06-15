@@ -5,20 +5,25 @@ class GameWorld {
         this.context = null;
         this.secondsPassed = 0;
         this.oldTimeStamp = 0;
-        this.level = 5;
+        this.level = 0;
         this.wordsArray = [];
         this.gameObjects = [];
+        this.introObjects = [];
+        this.spaceshipObject;
         this.resetCounter = 0;
         this.prevChar = "";
         this.firstChar = true;
-        this.init(canvasId);
+        this.title;
+        this.button;
+        this.canvasId = canvasId;
+        this.initIntro();
     }
 
-    init(canvasId) {
-        this.canvas = document.getElementById(canvasId);
+    init() {
+        //this.canvas = document.getElementById(this.canvasId);
         this.context = this.canvas.getContext('2d');
         const pixelFont = new FontFace("pixelFont", "url(./font/04b03.ttf)");
-        this.wordsArray = this.getLevel(this.level);
+        
 
         //INPUT HANDLER
         this.inputHandler();
@@ -28,6 +33,73 @@ class GameWorld {
         // Request an animation frame for the first time
         // The gameLoop() function is called as a callback of this request
         window.requestAnimationFrame((timeStamp) => { this.gameLoop(timeStamp) });
+    }
+
+    initIntro() {
+        this.canvas = document.getElementById(this.canvasId);
+        this.context = this.canvas.getContext('2d');
+        const pixelFont = new FontFace("pixelFont", "url(./font/04b03.ttf)");
+
+        //INPUT HANDLER
+        this.inputClick();
+
+        this.createIntro();
+
+        window.requestAnimationFrame((timeStamp) => { this.gameIntro(timeStamp) });
+    }
+
+    inputClick() {
+
+        document.addEventListener('click', (event) => {
+            this.detectClick(event.offsetX, event.offsetY);
+        });
+    }
+
+    createIntro() {
+
+        this.button = new Button(this.context, '< NEW GAME >', 135, 450);
+        this.title = new Title(this.context, 160, 200, 3);
+        this.introObjects.push(this.button);
+        this.introObjects.push(this.title);
+
+    }
+
+    gameIntro(timeStamp) {
+        // Calculate how much time has passed
+        this.secondsPassed = (timeStamp - this.oldTimeStamp) / 1000;
+        this.secondsPassed = Math.min(this.secondsPassed, 0.1); // Move forward with a max amount
+        this.oldTimeStamp = timeStamp;
+
+        // Loop over all game objects to update
+        for (let i = 0; i < this.introObjects.length; i++) {
+            this.introObjects[i].update(this.secondsPassed);
+        }
+
+
+
+        this.clearCanvas();
+
+        // Loop over all game objects to draw
+        for (let i = 0; i < this.introObjects.length; i++) {
+            this.introObjects[i].draw();
+        }
+
+        // If is clicked, start the game
+        console.log(this.title.isClicked);
+        if (this.title.isClicked > 5) {
+            this.init();
+            return;
+        }
+
+        // Keep requesting new frames
+        window.requestAnimationFrame((timeStamp) => this.gameIntro(timeStamp));
+    }
+
+    detectClick(offsetX, offsetY) {
+        if (this.rectIntersect(this.button.x, this.button.y, this.button.width, this.button.height, offsetX, offsetY, 1, 1)) {
+            this.title.click(this.secondsPassed);
+            this.introObjects.shift();
+        }
     }
 
     inputHandler() {
@@ -46,7 +118,7 @@ class GameWorld {
                 //console.log(this.wordsArray[selectedIndex]);
                 //console.log(event.key);
                 this.gameObjects[selectedIndex].updatePickedStatus();
-                this.firstChar = false;              
+                this.firstChar = false;
             } else {
                 console.log('Continua intentant-ho');
             };
@@ -54,7 +126,7 @@ class GameWorld {
         } else {
             //console.log('paraula ja bloquejada:');
             this.prevChar += event.key;
-            
+
             //spell
             let found = false;
             let selectedIndex = 0;
@@ -70,12 +142,17 @@ class GameWorld {
                         // Update completed status
                         this.gameObjects[i].updateCompletedStatus();
                         console.log(this.wordsArray);
-                        //buildHTML(this.wordsArray);
-                        this.firstChar = true;
+                        this.firstChar = true;                      
                     };
                     if (this.wordsArray.length === 0) {
                         console.log('Win!');
+                        this.prevChar = "";
+                        this.firstChar = true;
+                        this.wordsArray = [];
+                        this.gameObjects = [];
+                        this.spaceshipObject = {};
                         //passem de nivell
+                        this.createWorld();
                     };
                 };
             };
@@ -107,7 +184,9 @@ class GameWorld {
 
 
     createWorld() {
-        let spaceshipObject = new Spaceship(this.context);
+        this.level++;
+        this.wordsArray = this.getLevel(this.level);
+        this.spaceshipObject = new Spaceship(this.context);
 
         // Let's build this.gameObjects array
         for (let i = 0; i < this.wordsArray.length; i++) {
@@ -116,8 +195,7 @@ class GameWorld {
         }
 
         // Adding the spaceship
-        this.gameObjects.push(spaceshipObject);
-
+        this.gameObjects.push(this.spaceshipObject);
     }
 
     gameLoop(timeStamp) {
@@ -146,7 +224,7 @@ class GameWorld {
         window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
     }
 
-    deleteCompleted () {
+    deleteCompleted() {
         for (let i = 0; i < this.gameObjects.length; i++) {
             if (this.gameObjects[i].isCompleted) {
                 this.gameObjects.splice(i, 1);
@@ -227,10 +305,10 @@ class GameWorld {
                 return ['cache', 'get', 'linux', 'algorithm', 'rest', 'script', 'documentation', 'frontend', 'mysql', 'plugin', 'internet', 'barcelona'];
                 break;
             case 10:
-                return ['camel case', 'game', 'vscode', 'width', 'assessment', 'safari', 'debugging', 'framework', 'microsoft', 'node.js', 'overflow', 'python'];
+                return ['camelcase', 'game', 'vscode', 'width', 'assessment', 'safari', 'debugging', 'framework', 'microsoft', 'nodejs', 'overflow', 'python'];
                 break;
             default:
-                return ['end'];
+                return ['game over'];
         }
     }
 

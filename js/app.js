@@ -471,7 +471,7 @@ class GameWorld {
                 return ['cache', 'get', 'linux', 'algorithm', 'rest', 'script', 'documentation', 'frontend', 'mysql', 'plugin', 'internet', 'barcelona'];
                 break;
             case 10:
-                return ['camelcase', 'game', 'vscode', 'width', 'assessment', 'safari', 'debugging', 'framework', 'microsoft', 'nodejs', 'overflow', 'python'];
+                return ['camelcase', 'game', 'vscode', 'width', 'async', 'safari', 'debugging', 'framework', 'microsoft', 'nodejs', 'overflow', 'python'];
                 break;
             default:
                 return ['gameover'];
@@ -493,8 +493,8 @@ class GameWorld {
     }
 
     getActionTime(level) {
-        let tMax = 18; //Bona: 18
-        let tMin = 10; //Bona: 10
+        let tMax = 20; //20
+        let tMin = 10; //10
         let time = Math.floor(Math.random() * (tMax - tMin + 1)) + tMin;
         return time;
     }

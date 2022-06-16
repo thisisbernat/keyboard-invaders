@@ -7,6 +7,7 @@ class GameWorld {
         this.oldTimeStamp = 0;
         this.level = 0;
         this.lives = 3;
+        this.hearts;
         this.wordsArray = [];
         this.gameObjects = [];
         this.introObjects = [];
@@ -247,6 +248,7 @@ class GameWorld {
         this.level++;
         this.wordsArray = this.getLevel(this.level);
         this.levelTitle = new LevelTitle(this.context, -200, 360, this.level);
+        this.hearts = new Hearts(this.context, this.level);
         this.spaceshipObject = new Spaceship(this.context);
         if (this.level > 10) {
             this.spaceshipObject.vy = -300;
@@ -263,6 +265,9 @@ class GameWorld {
 
         // Adding the spaceship
         this.gameObjects.push(this.spaceshipObject);
+
+        // Adding the hearts
+        this.gameObjects.push(this.hearts);
 
         // Adding the level title
         this.gameObjects.push(this.levelTitle);
@@ -290,7 +295,7 @@ class GameWorld {
             this.impactedBlocks.push(this.deleteImpacted());
         }
 
-        if (this.gameObjects.length <= 2) {
+        if (this.gameObjects.length <= 3) {
             // NEXT LEVEL!
             this.prevChar = "";
             this.firstChar = true;
@@ -300,7 +305,9 @@ class GameWorld {
             this.createWorld();
         }
 
-        console.log(this.lives - this.impactedBlocks.length)
+        console.log(`Vides: ${this.lives - this.impactedBlocks.length}`)
+        //console.log(this.gameObjects[this.gameObjects.length - 2]);
+        this.gameObjects[this.gameObjects.length - 2].update(this.lives - this.impactedBlocks.length);
 
         if (this.lives - this.impactedBlocks.length <= 0) {
             console.log('mort!');
@@ -345,7 +352,7 @@ class GameWorld {
 
     deleteImpacted() {
         let impactedBlocks = [];
-        for (let i = 0; i < this.gameObjects.length - 2; i++) {
+        for (let i = 0; i < this.gameObjects.length - 3; i++) {
             if (this.gameObjects[i].y + this.gameObjects[i].height > 660) {
                 impactedBlocks = this.gameObjects.splice(i, 1);
                 this.wordsArray.splice(i, 1);
@@ -369,7 +376,7 @@ class GameWorld {
 
 
         // Iterate all objects except the last two (spaceship and level title)
-        for (let i = 0; i < this.gameObjects.length - 2; i++) {
+        for (let i = 0; i < this.gameObjects.length - 3; i++) {
             obj1 = this.gameObjects[i];
             obj2 = this.spaceshipObject; // The spaceship
 
@@ -426,7 +433,7 @@ class GameWorld {
                 return ['canvas', 'backend', 'explorer', 'json', 'apple', 'string', 'ruby', 'delete', 'object'];
                 break;
             case 7:
-                return ['computer', 'back', 'gnu', 'http', 'windows', 'api', 'developement', 'firefox', 'mongoose', 'number'];
+                return ['computer', 'kata', 'gnu', 'http', 'windows', 'api', 'developement', 'firefox', 'mongoose', 'number'];
                 break;
             case 8:
                 return ['code', 'edge', 'java', 'list', 'angular', 'stack', 'resolution', 'mongodb', 'null', 'php', 'flexbox'];

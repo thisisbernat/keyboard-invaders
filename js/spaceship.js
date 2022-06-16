@@ -17,8 +17,8 @@ class Spaceship extends GameObject {
     }
 
     draw() {
-        const background = this.drawSpaceshipImage();
-        this.context.drawImage(background, this.x, this.y);
+        const spaceshipImage = this.drawSpaceshipImage();
+        this.context.drawImage(spaceshipImage, this.x, this.y);
     }
 
     update(secondsPassed) {
@@ -32,8 +32,8 @@ class Spaceship extends GameObject {
     }
 
     drawSpaceshipImage() {
-        const background = new Image();
-        background.src = "./img/spaceship.png";
-        return background;
+        const spaceshipImage = new Image();
+        spaceshipImage.src = "./img/spaceship.png";
+        return spaceshipImage;
     }
 }

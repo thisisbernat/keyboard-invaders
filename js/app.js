@@ -143,7 +143,6 @@ class GameWorld {
     }
 
     gameOutro(timeStamp) {
-        console.log('OUTRO')
         // Calculate how much time has passed
         this.secondsPassed = (timeStamp - this.oldTimeStamp) / 1000;
         this.secondsPassed = Math.min(this.secondsPassed, 0.1); // Move forward with a max amount
@@ -166,15 +165,6 @@ class GameWorld {
         let btn = new Button(this.context, '< AGAIN! >', 155, 450)
         btn.draw();
         this.inputClickOutro();
-
-        /*
-        // If is clicked, start the game
-        //console.log(this.title.isClicked);
-        if (this.title.isClicked > 5) {
-            this.init();
-            return;
-        }
-        */
 
         // Keep requesting new frames
         window.requestAnimationFrame((timeStamp) => this.gameOutro(timeStamp));
@@ -212,16 +202,14 @@ class GameWorld {
             this.prevChar = event.key;
             let selectedIndex = this.choice(event.key);
             if (selectedIndex !== -1) {
-                //console.log(this.wordsArray[selectedIndex]);
-                //console.log(event.key);
                 this.gameObjects[selectedIndex].updatePickedStatus();
                 this.firstChar = false;
             } else {
-                console.log('Continua intentant-ho');
+                //console.log('Keep trying');
             };
-            console.log(this.prevChar);
+            //console.log(this.prevChar);
         } else {
-            //console.log('paraula ja bloquejada:');
+            //console.log('word already picked');
             this.prevChar += event.key;
 
             //spell
@@ -240,7 +228,7 @@ class GameWorld {
 
                         this.gameObjects[i].updateCompletedStatus();
                         this.deleteCompleted();
-                        console.log(this.wordsArray);
+                        //console.log(this.wordsArray);
                         this.firstChar = true;
                     };
                     if (this.wordsArray.length === 0) {
@@ -258,10 +246,10 @@ class GameWorld {
                 //console.log(this.wordsArray[selectedIndex]);
 
             } else {
-                console.log(`error corregit!`);
+                //console.log(`error corregit!`);
                 this.prevChar = this.prevChar.slice(0, -1);
             };
-            console.log(this.prevChar);
+            //console.log(this.prevChar);
         };
     };
 
@@ -343,26 +331,16 @@ class GameWorld {
             this.createWorld();
         }
 
-        console.log(`Vides: ${this.lives - this.impactedBlocks.length}`)
+        //console.log(`Vides: ${this.lives - this.impactedBlocks.length}`)
         //console.log(this.gameObjects[this.gameObjects.length - 2]);
         this.gameObjects[this.gameObjects.length - 2].update(this.lives - this.impactedBlocks.length);
 
         if (this.lives - this.impactedBlocks.length <= 0) {
-            console.log('mort!');
+            //console.log('Dead!');
 
             this.dead = true;
             this.initOutro();
             return;
-
-            /*
-            this.prevChar = "";
-            this.firstChar = true;
-            this.wordsArray = [];
-            this.gameObjects = [];
-            this.spaceshipObject = {};
-            this.level=10;
-            this.createWorld();
-            */
 
         };
 

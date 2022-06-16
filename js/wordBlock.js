@@ -7,6 +7,7 @@ class WordBlock extends GameObject {
         this.actionTime = t;
         this.isPicked = false;
         this.isCompleted = false;
+        this.isColliding = false;
         this.charCount = 1;
 
         // Set font and measure text with this font
@@ -19,22 +20,24 @@ class WordBlock extends GameObject {
         this.height = 25;
         this.offsetY = 17;
         this.width = this.blockPadding + this.textLength + this.blockPadding;
-
-        this.blockColor = 'black';
     }
 
     draw() {
         // Draw a round rectangle
-        let rectangleColor = this.isColliding ? 'darkred' : 'rgba(45, 62, 80, 0.5)';
+        if (this.text !== 'gameover') {
+        let rectangleColor = this.isColliding ? 'darkred' : 'rgba(45, 62, 80, 0.8)';
         this.block(this.text, this.x, this.y, rectangleColor);
+        }
         
     }
 
     update(secondsPassed) {
         // 240, 710 is the static position of the spaceship
+        if (this.text !== 'gameover') {
         let { vx, vy } = this.getSpeeds(this.ogX, this.ogY, 240, 710);
         this.x += vx * secondsPassed;
         this.y += vy * secondsPassed;
+        }
     }
 
     updateSpeed(newTime) {
@@ -59,13 +62,13 @@ class WordBlock extends GameObject {
         this.context.fillStyle = color;        
         this.context.fill();
 
-
         // Writing the text
         /* ORIGINAL
         let textColor = this.isPicked ? '#ff9c00' : 'white';
         this.context.fillStyle = textColor;
         this.context.fillText(text, x+this.blockPadding, y+this.offsetY);
         */
+
         this.context.font = '16px pixelFont';
         if (this.isPicked) {
             this.context.fillStyle = '#ff9c00';

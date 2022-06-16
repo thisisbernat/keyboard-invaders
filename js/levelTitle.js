@@ -13,19 +13,19 @@ class LevelTitle extends GameObject {
         this.context.font = `50px pixelFont`;
         this.context.fillStyle = 'white';
         if (this.level > 10) {
-            this.context.fillText(`GAME OVER`, this.x, this.y);
+            this.context.fillText(`YOU WON!`, this.x, this.y);
         } else {
             this.context.fillText(`LEVEL ${this.level}`, this.x, this.y);
         }
     }
 
     update(secondsPassed) {
-        //GAME OVER SETTINGS
+        //YOU WON SETTINGS
         if (this.level > 10) {
             this.vx = 500;
-            if (this.x > 75 && this.x <= 110) {
-                this.x += 50 * secondsPassed;
-            } else if(this.x > 110) {
+            if (this.x > 120 && this.x <= 140) {
+                this.x += 75 * secondsPassed;
+            } else if(this.x > 140) {
                 this.x += 0;
             } else {
                 this.x += this.vx * secondsPassed;

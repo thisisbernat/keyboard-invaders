@@ -6,9 +6,11 @@ class GameWorld {
         this.secondsPassed = 0;
         this.oldTimeStamp = 0;
         this.level = 0;
+        this.lives = 3;
         this.wordsArray = [];
         this.gameObjects = [];
         this.introObjects = [];
+        this.outroObjects = [];
         this.spaceshipObject;
         this.resetCounter = 0;
         this.prevChar = "";
@@ -17,18 +19,21 @@ class GameWorld {
         this.button;
         this.canvasId = canvasId;
         this.levelTitle = "";
+        this.impactedBlocks = [];
+        this.dead = false;
         this.initIntro();
     }
 
     init() {
-        //this.canvas = document.getElementById(this.canvasId);
+        this.canvas = document.getElementById(this.canvasId);
         this.context = this.canvas.getContext('2d');
         const pixelFont = new FontFace("pixelFont", "url(./font/04b03.ttf)");
-        
+
 
         //INPUT HANDLER
         this.inputHandler();
 
+ 
         this.createWorld();
 
         // Request an animation frame for the first time
@@ -49,6 +54,16 @@ class GameWorld {
         window.requestAnimationFrame((timeStamp) => { this.gameIntro(timeStamp) });
     }
 
+    initOutro() {
+        this.canvas = document.getElementById(this.canvasId);
+        this.context = this.canvas.getContext('2d');
+        const pixelFont = new FontFace("pixelFont", "url(./font/04b03.ttf)");
+
+        this.createOutro();
+
+        window.requestAnimationFrame((timeStamp) => { this.gameOutro(timeStamp) });
+    }
+
     inputClick() {
 
         document.addEventListener('click', (event) => {
@@ -63,6 +78,15 @@ class GameWorld {
         this.introObjects.push(this.button);
         this.introObjects.push(this.title);
 
+    }
+
+    createOutro() {
+        this.spaceshipObject = {};
+        this.title = new GameOverTitle(this.context, -200, 360, this.level);
+        this.spaceshipObject = new Spaceship(this.context);
+        this.spaceshipObject.vy = -300;
+        this.outroObjects.push(this.title);
+        this.outroObjects.push(this.spaceshipObject);
     }
 
     gameIntro(timeStamp) {
@@ -86,7 +110,7 @@ class GameWorld {
         }
 
         // If is clicked, start the game
-        console.log(this.title.isClicked);
+        //console.log(this.title.isClicked);
         if (this.title.isClicked > 5) {
             this.init();
             return;
@@ -94,6 +118,40 @@ class GameWorld {
 
         // Keep requesting new frames
         window.requestAnimationFrame((timeStamp) => this.gameIntro(timeStamp));
+    }
+
+    gameOutro(timeStamp) {
+        console.log('OUTRO')
+        // Calculate how much time has passed
+        this.secondsPassed = (timeStamp - this.oldTimeStamp) / 1000;
+        this.secondsPassed = Math.min(this.secondsPassed, 0.1); // Move forward with a max amount
+        this.oldTimeStamp = timeStamp;
+
+        // Loop over all game objects to update
+        for (let i = 0; i < this.outroObjects.length; i++) {
+            this.outroObjects[i].update(this.secondsPassed);
+        }
+
+
+
+        this.clearCanvas();
+
+        // Loop over all game objects to draw
+        for (let i = 0; i < this.outroObjects.length; i++) {
+            this.outroObjects[i].draw();
+        }
+
+        /*
+        // If is clicked, start the game
+        //console.log(this.title.isClicked);
+        if (this.title.isClicked > 5) {
+            this.init();
+            return;
+        }
+        */
+
+        // Keep requesting new frames
+        window.requestAnimationFrame((timeStamp) => this.gameOutro(timeStamp));
     }
 
     detectClick(offsetX, offsetY) {
@@ -104,8 +162,7 @@ class GameWorld {
     }
 
     inputHandler() {
-
-        document.addEventListener('keydown', (event) => {
+        document.addEventListener('keypress', (event) => {
             this.logKeys(event);
         });
     }
@@ -141,9 +198,11 @@ class GameWorld {
                         //treure la paraula de l'array
                         this.wordsArray.splice(i, 1);
                         // Update completed status
+
                         this.gameObjects[i].updateCompletedStatus();
+                        this.deleteCompleted();
                         console.log(this.wordsArray);
-                        this.firstChar = true;                      
+                        this.firstChar = true;
                     };
                     if (this.wordsArray.length === 0) {
                         // NEXT LEVEL!
@@ -158,6 +217,7 @@ class GameWorld {
             };
             if (found) {
                 //console.log(this.wordsArray[selectedIndex]);
+
             } else {
                 console.log(`error corregit!`);
                 this.prevChar = this.prevChar.slice(0, -1);
@@ -189,18 +249,17 @@ class GameWorld {
         this.levelTitle = new LevelTitle(this.context, -200, 360, this.level);
         this.spaceshipObject = new Spaceship(this.context);
         if (this.level > 10) {
-         this.spaceshipObject.vy = -300;
+            this.spaceshipObject.vy = -300;
         }
 
         // Let's build this.gameObjects array
-        
-        if(this.level <= 10) {
+
+        if (this.level <= 11) {
             for (let i = 0; i < this.wordsArray.length; i++) {
                 // new WordBlock(this.context, 'text', x, y, t)
                 this.gameObjects.push(new WordBlock(this.context, this.wordsArray[i], this.getRandomX(), this.getRandomY(), this.getActionTime(this.level)));
             }
         }
-        
 
         // Adding the spaceship
         this.gameObjects.push(this.spaceshipObject);
@@ -215,12 +274,52 @@ class GameWorld {
         this.secondsPassed = Math.min(this.secondsPassed, 0.1); // Move forward with a max amount
         this.oldTimeStamp = timeStamp;
 
+        this.deleteCompleted();
+
         // Loop over all game objects to update
         for (let i = 0; i < this.gameObjects.length; i++) {
             this.gameObjects[i].update(this.secondsPassed);
         }
 
-        this.deleteCompleted();
+        
+
+        let impacted;
+        impacted = this.deleteImpacted();
+
+        if (impacted.length > 0) {
+            this.impactedBlocks.push(this.deleteImpacted());
+        }
+
+        if (this.gameObjects.length <= 2) {
+            // NEXT LEVEL!
+            this.prevChar = "";
+            this.firstChar = true;
+            this.wordsArray = [];
+            this.gameObjects = [];
+            this.spaceshipObject = {};
+            this.createWorld();
+        }
+
+        console.log(this.lives - this.impactedBlocks.length)
+
+        if (this.lives - this.impactedBlocks.length <= 0) {
+            console.log('mort!');
+
+            this.dead = true;
+            this.initOutro();
+            return;
+
+            /*
+            this.prevChar = "";
+            this.firstChar = true;
+            this.wordsArray = [];
+            this.gameObjects = [];
+            this.spaceshipObject = {};
+            this.level=10;
+            this.createWorld();
+            */  
+       
+        };
 
         this.detectCollisions();
 
@@ -230,6 +329,7 @@ class GameWorld {
         for (let i = 0; i < this.gameObjects.length; i++) {
             this.gameObjects[i].draw();
         }
+   
 
         // Keep requesting new frames
         window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
@@ -243,13 +343,30 @@ class GameWorld {
         }
     }
 
+    deleteImpacted() {
+        let impactedBlocks = [];
+        for (let i = 0; i < this.gameObjects.length - 2; i++) {
+            if (this.gameObjects[i].y + this.gameObjects[i].height > 660) {
+                impactedBlocks = this.gameObjects.splice(i, 1);
+                this.wordsArray.splice(i, 1);
+            }
+        }
+        return impactedBlocks;
+    }
+
+    //this.gameObjects[i].height > 650
+
     detectCollisions() {
         let obj1;
         let obj2;
 
+        /*
+        // Reset colliding state for all objects
         for (let i = 0; i < this.gameObjects.length; i++) {
             this.gameObjects[i].isColliding = false;
         }
+        */
+
 
         // Iterate all objects except the last two (spaceship and level title)
         for (let i = 0; i < this.gameObjects.length - 2; i++) {
@@ -259,9 +376,9 @@ class GameWorld {
             if (this.rectIntersect(obj1.x, obj1.y, obj1.width, obj1.height, obj2.x, obj2.y, obj2.width, obj2.height)) {
                 obj1.isColliding = true;
             }
+
         }
     }
-
 
     rectIntersect(x1, y1, w1, h1, x2, y2, w2, h2) {
 
@@ -340,8 +457,8 @@ class GameWorld {
     }
 
     getActionTime(level) {
-        let tMax = 30; //Bona: 8
-        let tMin = 15; //Bona: 5
+        let tMax = 18; //Bona: 18
+        let tMin = 10; //Bona: 10
         let time = Math.floor(Math.random() * (tMax - tMin + 1)) + tMin;
         return time;
     }

@@ -23,9 +23,9 @@ class LevelTitle extends GameObject {
         //YOU WON SETTINGS
         if (this.level > 10) {
             this.vx = 500;
-            if (this.x > 120 && this.x <= 140) {
+            if (this.x > 100 && this.x <= 125) {
                 this.x += 75 * secondsPassed;
-            } else if(this.x > 140) {
+            } else if(this.x > 125) {
                 this.x += 0;
             } else {
                 this.x += this.vx * secondsPassed;

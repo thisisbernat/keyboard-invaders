@@ -25,10 +25,10 @@ body {
     color: #CCC4D3;
     font-family: pixelFont;
     font-size: 3rem;
-    
+
 }
 
-body > div {
+body>div {
     padding-top: 20px;
     font-family: pixelFont;
     font-size: 3rem;
@@ -43,10 +43,10 @@ body > div {
     bottom: 0;
     margin: auto;
     border: 0;
-    z-index: 1000002;
+
     box-shadow: 0 0 30px #000;
     font-family: pixelFont;
-    font-size: 3rem;    
+    font-size: 3rem;
 }
 
 h1 {

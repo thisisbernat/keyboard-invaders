@@ -34,7 +34,6 @@ class GameWorld {
         //INPUT HANDLER
         this.inputHandler();
 
- 
         this.createWorld();
 
         // Request an animation frame for the first time
@@ -49,6 +48,7 @@ class GameWorld {
 
         //INPUT HANDLER
         this.inputClick();
+        this.inputEnter();
 
         this.createIntro();
 
@@ -69,6 +69,22 @@ class GameWorld {
 
         document.addEventListener('click', (event) => {
             this.detectClick(event.offsetX, event.offsetY);
+        });
+    }
+
+    inputEnter() {
+
+        document.addEventListener('keydown', (event) => {
+            if(event.key === 'Enter') {
+                this.detectEnter(event.offsetX, event.offsetY);
+            }
+        });
+    }
+
+    inputClickOutro() {
+
+        document.addEventListener('click', (event) => {
+            this.detectClickOutro(event.offsetX, event.offsetY);
         });
     }
 
@@ -116,6 +132,11 @@ class GameWorld {
             this.init();
             return;
         }
+        //console.log(this.title.isEnterPressed);
+        if (this.title.isEnterPressed > 1) {
+            this.init();
+            return;
+        }
 
         // Keep requesting new frames
         window.requestAnimationFrame((timeStamp) => this.gameIntro(timeStamp));
@@ -142,6 +163,10 @@ class GameWorld {
             this.outroObjects[i].draw();
         }
 
+        let btn = new Button(this.context, '< AGAIN! >', 155, 450)
+        btn.draw();
+        this.inputClickOutro();
+
         /*
         // If is clicked, start the game
         //console.log(this.title.isClicked);
@@ -159,6 +184,19 @@ class GameWorld {
         if (this.rectIntersect(this.button.x, this.button.y, this.button.width, this.button.height, offsetX, offsetY, 1, 1)) {
             this.title.click(this.secondsPassed);
             this.introObjects.shift();
+        }
+    }
+
+    detectEnter(offsetX, offsetY) {
+        if (this.rectIntersect(this.button.x, this.button.y, this.button.width, this.button.height, offsetX, offsetY, 1, 1)) {
+            this.title.enter(this.secondsPassed);
+            this.introObjects.shift();
+        }
+    }
+
+    detectClickOutro(offsetX, offsetY) {
+        if (this.rectIntersect(this.button.x, this.button.y, this.button.width, this.button.height, offsetX, offsetY, 1, 1)) {
+            document.location.reload();
         }
     }
 
@@ -286,7 +324,7 @@ class GameWorld {
             this.gameObjects[i].update(this.secondsPassed);
         }
 
-        
+
 
         let impacted;
         impacted = this.deleteImpacted();
@@ -324,22 +362,35 @@ class GameWorld {
             this.spaceshipObject = {};
             this.level=10;
             this.createWorld();
-            */  
-       
+            */
+
         };
 
         this.detectCollisions();
 
+
+
         this.clearCanvas();
+
 
         // Loop over all game objects to draw
         for (let i = 0; i < this.gameObjects.length; i++) {
             this.gameObjects[i].draw();
         }
-   
+
+        if (this.level > 10) {
+            let btn = new Button(this.context, '< AGAIN! >', 155, 450)
+            btn.draw();
+            this.inputClickOutro();
+        }
+
 
         // Keep requesting new frames
         window.requestAnimationFrame((timeStamp) => this.gameLoop(timeStamp));
+
+
+
+
     }
 
     deleteCompleted() {

@@ -7,6 +7,7 @@ class Title extends GameObject {
         this.ogY = y;
         this.actionTime = t;
         this.isClicked = 1;
+        this.isEnterPressed = 1;
     }
 
     draw() {
@@ -33,5 +34,9 @@ class Title extends GameObject {
 
     click(secondsPassed) {
         this.isClicked++;
+    }
+
+    enter(secondsPassed) {
+        this.isEnterPressed++;
     }
 }
